@@ -1,4 +1,4 @@
-package lt.kitrov.sebtask;
+package lt.kitrov.sebtask.controller;
 
 import lt.kitrov.sebtask.model.Product;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,14 +38,19 @@ public class ProductsController {
     }
 
     private void suggestProductByAdultIncome(List<Product> productList, int income) {
-        if (income > 40000) {
-            productList.add(new Product(CURRENT_ACCOUNT_PLUS));
-            productList.add(new Product(GOLD_CREDIT_CARD));
-        } else if (income > 12000) {
-            productList.add(new Product(CREDIT_CARD));
-        } else {
+        if (income > 0) {
             productList.add(new Product(CURRENT_ACCOUNT));
-            productList.add(new Product(DEBIT_CARD));
+            if (income > 12000) {
+                productList.add(new Product(CREDIT_CARD));
+
+                if (income > 40000) {
+                    productList.add(new Product(CURRENT_ACCOUNT_PLUS));
+                    productList.add(new Product(GOLD_CREDIT_CARD));
+                }
+            } else {
+                productList.add(new Product(DEBIT_CARD));
+            }
         }
+
     }
 }

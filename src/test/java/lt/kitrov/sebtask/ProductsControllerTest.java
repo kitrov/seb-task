@@ -1,5 +1,6 @@
 package lt.kitrov.sebtask;
 
+import lt.kitrov.sebtask.controller.ProductsController;
 import lt.kitrov.sebtask.model.Product;
 import lt.kitrov.sebtask.model.ProductType;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static lt.kitrov.sebtask.model.ProductType.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -20,14 +22,18 @@ public class ProductsControllerTest {
     @Autowired
     private ProductsController productsController;
 
+    private static void assertIfContainsProduct(List<Product> productList, ProductType productType) {
+        assertTrue(productList.stream().anyMatch(product -> product.getName().equals(productType.toString())));
+    }
+
     private void assertIfProductInSuggestion(int age, boolean isStudent, int income, ProductType productType) {
         List<Product> result = productsController.productsSuggestion(age, isStudent, income);
-        assertTrue(result.stream().anyMatch(product -> product.getName().equals(productType.toString())));
+        assertIfContainsProduct(result, productType);
     }
 
     @Test
     public void productsSuggestion_currentAccount() {
-        assertIfProductInSuggestion(18, false, 0, CURRENT_ACCOUNT);
+        assertIfProductInSuggestion(18, false, 10, CURRENT_ACCOUNT);
     }
 
     @Test
@@ -71,5 +77,23 @@ public class ProductsControllerTest {
         assertTrue(result.isEmpty());
         result = productsController.productsSuggestion(18, false, -1);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void productsSuggestion_adultHighIncome() {
+        List<Product> result = productsController.productsSuggestion(18, false, 44000);
+        assertEquals(4, result.size());
+        assertIfContainsProduct(result, CURRENT_ACCOUNT);
+        assertIfContainsProduct(result, CURRENT_ACCOUNT_PLUS);
+        assertIfContainsProduct(result, CREDIT_CARD);
+        assertIfContainsProduct(result, GOLD_CREDIT_CARD);
+    }
+
+    @Test
+    public void productsSuggestion_adultLowIncome() {
+        List<Product> result = productsController.productsSuggestion(18, false, 10000);
+        assertEquals(2, result.size());
+        assertIfContainsProduct(result, CURRENT_ACCOUNT);
+        assertIfContainsProduct(result, DEBIT_CARD);
     }
 }
