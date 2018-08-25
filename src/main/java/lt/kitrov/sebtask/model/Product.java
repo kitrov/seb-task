@@ -4,8 +4,8 @@ public class Product {
 
     private String name;
 
-    public Product(String name) {
-        this.name = name;
+    public Product(ProductType productType) {
+        this.name = productType.toString();
     }
 
     public String getName() {
