@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SEB products suggestion application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+    <script src="/js/home.js"></script>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body ng-app="seb-task">
+<div ng-controller="productSuggestions">
+    <form name="personalInfoForm">
+        <fieldset>
+            <legend>Personal information</legend>
+            <div class="form-line">
+                <label>Age:
+                    <input type="number" ng-model="user.age" name="age" ng-min="0" min="0" required>
+                </label>
+            </div>
+            <div class="form-line">
+                <label>Student:
+                    <input type="checkbox" ng-model="user.student" name="student">
+                </label>
+            </div>
+            <div class="form-line">
+                <label>Income:
+                    <input type="number" ng-model="user.income" name="income" ng-min="0" min="0" required>
+                </label>
+            </div>
+            <button ng-click="getData()"
+                    ng-disabled="personalInfoForm.age.$invalid || personalInfoForm.income.$invalid">
+                Submit
+            </button>
+        </fieldset>
+    </form>
+
+    <fieldset>
+        <legend>Product suggestions</legend>
+        <ul>
+            <li ng-repeat="product in products">{{product.name}}</li>
+        </ul>
+    </fieldset>
+</div>
+</body>
+</html>
